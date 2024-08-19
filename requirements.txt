@@ -1,0 +1,21 @@
+flask
+flask-sqlalchemy
+flask-user==1.0.2.2
+
+Good evening,
+
+I'm contacting you because I'd like to register for a course exam. Unfortunately, I missed the deadline. I got in touch with the teacher and he told me to get in touch with you (examinations office). The course in question is Modeling in Cognitive Science for the Masters. I apologise in advance for missing the registration deadline. I'm still trying to find my feet in the German university system. I'd like to know what can be done in my case.
+
+
+Thank you in advance and good evening
+
+
+j'aimerai résigner mon abonnement à NOz.
+
+Produit: "Die gedru
+
+
+David --->Learning Mechanism
+Luca ---> Coding strategies 
+Carine ---> Classification, size, Cifer (conversion into greyscale) / Evaluation of performance and what to use for the comparison
+Mike --> Frameworks

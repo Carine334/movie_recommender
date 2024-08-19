@@ -1,0 +1,136 @@
+{% extends "flask_user_layout.html" %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}"> 
+
+<h4>Choose your favorite Genres</h4>
+<div class="panel panel-default">
+    <div class="panel-body"> 
+        <p>
+            {% for g in genres %}
+               <a href = "#" class="card-link"> <span class="label label-default">{{ g.genre}}</span> </a>
+            {% endfor %}
+        </p>
+    </div>
+</div>
+
+<h2>Recommendations based on your ratings:</h2>
+<p><b> {{no_recommendation}} </b></p>
+
+{% for x in recommended %}
+    <div class = "recommendations"> {{x}} </div>
+{% endfor %}       
+
+    <h2>{{message}}</h2>
+    {% for m in movies %}
+        <div class="panel panel-default">
+            <div class="panel-heading"><b>{{ m.title }}</b></div>
+            <div class="panel-body">
+                <p>
+                    {% for g in m.genres %}
+                        <span class="label label-default">{{ g.genre }}</span>
+                    {% endfor %}
+                </p>
+            
+                <p><b>related terms: </b>
+                    {%for singleTag in m.tag %} 
+                        <span> {{singleTag.tag}}, </span>
+                     {% endfor%}
+                </p>
+                <p> <b> Links: </b>
+                    {%for singleLink in m.link %} 
+                    <span> <a href={{domain_2 + singleLink.imdbId + "/" }}> {{domain_2 + singleLink.imdbId + "/"}} </a>, <a href= {{domain_1 + singleLink.tmdbId}}> {{domain_1 + singleLink.tmdbId}} </a></span>
+                     {% endfor%}
+                </p>
+            </div>
+            <div class="panel-footer movie-rating">Rate:
+                <a href="#" class="card-link" data-movieid={{m.movieId}}>1</a>
+                <a href="#" class="card-link" data-movieid={{m.movieId}}>2</a>
+                <a href="#" class="card-link" data-movieid={{m.movieId}}>3</a>
+                <a href="#" class="card-link" data-movieid={{m.movieId}}>4</a>
+                <a href="#" class="card-link" data-movieid={{m.movieId}}>5</a> Stars
+            </div> 
+            
+        </div>
+    {% endfor %}
+</div>
+
+
+
+<script>
+
+    // Function to handle the click event on any rating link
+    function rateMovie(event) {
+        event.preventDefault(); // Prevent the default anchor action
+
+        var movieid = this.getAttribute('data-movieid');
+        var rating = this.textContent;
+        var elem = this;
+
+        // Create an AJAX request
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '../recommender.wsgi/rate', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        // Handle the response
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                // Replace the entire div with the response
+                elem.parentElement.innerHTML = xhr.responseText;
+            } else {
+                alert('Request failed. Returned status of ' + xhr.status);
+            }
+        };
+
+        // Send the request with the movie ID and the rating
+        xhr.send('movieid=' + movieid + '&rating=' + rating);
+        
+    }
+
+    // Attach the event listener to each rating link
+    var links = document.querySelectorAll('.movie-rating .card-link');
+    for (var i = 0; i < links.length; i++) {
+        links[i].addEventListener('click', rateMovie);
+    }
+
+
+
+ // Function to handle the click event on any genres
+ function preferences_gestion(event) {
+        event.preventDefault(); // Prevent the default anchor action
+
+        var genres = this.textContent;
+        var elem = this;
+
+        // Create an AJAX request
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '../recommender.wsgi/preferences', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        // Handle the response
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                // Replace the entire div with the response
+                elem.parentElement.innerHTML = xhr.responseText;
+            } else {
+                alert('Request failed. Returned status of ' + xhr.status);
+            }
+        };
+
+        // Send the request with the genre
+        xhr.send('genres=' + genres);
+        
+    }
+
+    // Attach the event listener to each rating link
+    var links = document.querySelectorAll('.card-link .label-default');
+    for (var i = 0; i < links.length; i++) {
+        links[i].addEventListener('click', preferences_gestion);
+    }
+
+
+</script>
+
+
+
+{% endblock %}
